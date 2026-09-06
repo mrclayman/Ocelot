@@ -47,7 +47,7 @@ public class DiscoveryDownstreamRouteFinder : IDownstreamRouteProvider
 
         // TODO: Could it be that the static route functionality was possibly lost here? -> StaticRoutesCreator.SetUpRoute -> _upstreamTemplatePatternCreator
         var upstreamPathTemplate = new UpstreamPathTemplateBuilder().WithOriginalValue(upstreamUrlPath).Build();
-        var upstreamHeaderTemplates = _upstreamHeaderTemplatePatternCreator.Create(upstreamHeaders, false); // ? discoveryDownstreamRoute.UpstreamHeaders
+        var upstreamHeaderTemplates = _upstreamHeaderTemplatePatternCreator.Create(/*upstreamHeaders*/ requestHeaders, false); // ? discoveryDownstreamRoute.UpstreamHeaders
 
         var routeBuilder = new DownstreamRouteBuilder()
             .WithServiceName(serviceName)

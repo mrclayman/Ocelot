@@ -25,7 +25,7 @@ public class DownstreamRouteFinderTests : UnitTest
     private UrlMatch _match;
     private string _upstreamHttpMethod;
     private string _upstreamHost;
-    private IHeaderDictionary _upstreamHeaders;
+    private Dictionary<string, string> _upstreamHeaders;
     private string _upstreamQuery;
     private UpstreamHeaderRoutingOptions _upstreamHeaderRoutingOptions;
     private readonly HeaderDictionary _requestHeaders;
@@ -494,7 +494,7 @@ public class DownstreamRouteFinderTests : UnitTest
     {
         // Arrange
         var serviceProviderConfig = new ServiceProviderConfigurationBuilder().Build();
-        var upstreamHeaders = new HeaderDictionary()
+        var upstreamHeaders = new Dictionary<string, string>() // new HeaderDictionary()
         {
             ["header1"] = "headerValue1",
             ["header2"] = "headerValue2",
@@ -545,7 +545,10 @@ public class DownstreamRouteFinderTests : UnitTest
         };
         _upstreamUrlPath = "matchInUrlMatcher/";
         _upstreamQuery = string.Empty;
-        _upstreamHeaders = new HeaderDictionary() { { "header1", "headerValue1" } };
+        _upstreamHeaders = new() // new HeaderDictionary()
+        {
+            { "header1", "headerValue1" },
+        };
         GivenTheTemplateVariableAndNameFinderReturns(new OkResponse<List<PlaceholderNameAndValue>>(new List<PlaceholderNameAndValue>()));
         GivenTheHeaderPlaceholderAndNameFinderReturns(new List<PlaceholderNameAndValue>());
         _routesConfig = new()
@@ -602,18 +605,20 @@ public class DownstreamRouteFinderTests : UnitTest
     private void GivenUpstreamHeaderRoutingOptionsEnabled()
     {
         _upstreamUrlPath = "matchInUrlMatcher/";
-        GivenTheTemplateVariableAndNameFinderReturns(new OkResponse<List<PlaceholderNameAndValue>>(new()));
+        GivenTheTemplateVariableAndNameFinderReturns(new OkResponse<List<PlaceholderNameAndValue>>([]));
         GivenUpstreamHeaderRoutingOptions();
-        _routesConfig = new()
-        {
+        _routesConfig =
+        [
             GivenRoute(priority: 1),
-        };
+        ];
         GivenTheConfigurationIs(string.Empty, new ServiceProviderConfigurationBuilder().Build());
         GivenTheUrlMatcherReturns(new UrlMatch(true));
         _upstreamHttpMethod = "Get";
     }
 
     [Fact]
+    [Trait("Feat", "360")] // https://github.com/ThreeMammals/Ocelot/issues/360
+    [Trait("PR", "1684")] // https://github.com/ThreeMammals/Ocelot/pull/1684
     public void Should_not_return_route_with_upstream_header_routing_options_enabled_and_no_request_headers()
     {
         GivenUpstreamHeaderRoutingOptionsEnabled();
@@ -622,6 +627,8 @@ public class DownstreamRouteFinderTests : UnitTest
     }
 
     [Fact]
+    [Trait("Feat", "360")] // https://github.com/ThreeMammals/Ocelot/issues/360
+    [Trait("PR", "1684")] // https://github.com/ThreeMammals/Ocelot/pull/1684
     public void Should_not_return_route_with_upstream_header_routing_options_enabled_and_non_matching_request_headers()
     {
         GivenUpstreamHeaderRoutingOptionsEnabled();
@@ -631,6 +638,8 @@ public class DownstreamRouteFinderTests : UnitTest
     }
 
     [Fact]
+    [Trait("Feat", "360")] // https://github.com/ThreeMammals/Ocelot/issues/360
+    [Trait("PR", "1684")] // https://github.com/ThreeMammals/Ocelot/pull/1684
     public void Should_return_route_with_upstream_header_routing_options_enabled_and_matching_request_headers()
     {
         GivenUpstreamHeaderRoutingOptionsEnabled();

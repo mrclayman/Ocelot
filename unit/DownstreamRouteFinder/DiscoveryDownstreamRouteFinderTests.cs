@@ -21,7 +21,7 @@ public class DiscoveryDownstreamRouteFinderTests : UnitTest
     private string _upstreamHost;
     private string _upstreamUrlPath;
     private string _upstreamHttpMethod;
-    private IHeaderDictionary _upstreamHeaders;
+    private /*IHeaderDictionary*/ Dictionary<string, string> _upstreamHeaders;
     private IInternalConfiguration _configuration;
     private Response<Ocelot.DownstreamRouteFinder.DownstreamRouteHolder> _resultTwo;
     private readonly string _upstreamQuery;
@@ -389,7 +389,7 @@ public class DiscoveryDownstreamRouteFinderTests : UnitTest
         _upstreamHost = "doesnt matter";
         _upstreamUrlPath = "/auth/test";
         _upstreamHttpMethod = "GET";
-        _upstreamHeaders = new HeaderDictionary()
+        _upstreamHeaders = new() // HeaderDictionary()
         {
             { "testHeader", "testHeaderValue" },
         };

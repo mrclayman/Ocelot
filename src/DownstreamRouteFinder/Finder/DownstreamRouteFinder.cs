@@ -37,10 +37,10 @@ public class DownstreamRouteFinder : IDownstreamRouteProvider
         foreach (var route in applicableRoutes)
         {
             var urlMatch = _urlMatcher.Match(upstreamUrlPath, upstreamQueryString, route.UpstreamTemplatePattern);
-            var headersMatch = _headerMatcher.Match(upstreamHeaders, route.UpstreamHeaderTemplates);
+            var headersMatch = _headerMatcher.Match(/*upstreamHeaders*/ requestHeaders, route.UpstreamHeaderTemplates);
             if (urlMatch.Match && headersMatch)
             {
-                downstreamRoutes.Add(GetPlaceholderNamesAndValues(upstreamUrlPath, upstreamQueryString, route, upstreamHeaders));
+                downstreamRoutes.Add(GetPlaceholderNamesAndValues(upstreamUrlPath, upstreamQueryString, route, /*upstreamHeaders*/ requestHeaders));
             }
         }
 
@@ -75,12 +75,14 @@ public class DownstreamRouteFinder : IDownstreamRouteProvider
             ? options.Headers.HasAnyOf(requestHeaders)
             : options.Headers.HasAllOf(requestHeaders);
 
-    private DownstreamRouteHolder GetPlaceholderNamesAndValues(string path, string query, Route route, IDictionary<string, string> upstreamHeaders)
+    private DownstreamRouteHolder GetPlaceholderNamesAndValues(string path, string query, Route route,
+        //IDictionary<string, string> upstreamHeaders)
+        IHeaderDictionary requestHeaders)
     {
         var templatePlaceholderNameAndValues = _pathPlaceholderFinder
             .Find(path, query, route.UpstreamTemplatePattern.OriginalValue)
             .Data;
-        var headerPlaceholders = _headerPlaceholderFinder.Find(upstreamHeaders, route.UpstreamHeaderTemplates);
+        var headerPlaceholders = _headerPlaceholderFinder.Find(/*upstreamHeaders*/ requestHeaders, route.UpstreamHeaderTemplates);
         templatePlaceholderNameAndValues.AddRange(headerPlaceholders);
 
         return new DownstreamRouteHolder(templatePlaceholderNameAndValues, route);

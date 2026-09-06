@@ -4,7 +4,9 @@ using Ocelot.Configuration;
 
 namespace Ocelot.UnitTests.Configuration;
 
-public class UpstreamRoutingHeadersTests
+[Trait("Feat", "360")] // https://github.com/ThreeMammals/Ocelot/issues/360
+[Trait("PR", "1684")] // https://github.com/ThreeMammals/Ocelot/pull/1684
+public class UpstreamRoutingHeadersTests : UnitTest
 {
     private IReadOnlyDictionary<string, ICollection<string>> _headersDictionary;
     private UpstreamRoutingHeaders _upstreamRoutingHeaders;
@@ -83,29 +85,29 @@ public class UpstreamRoutingHeadersTests
     private void AndGivenMismatchingRequestHeaders()
     {
         _requestHeaders = new HeaderDictionary() {
-            { "someHeader", new StringValues(new []{ "someHeaderValue" })},
+            { "someHeader", new StringValues(["someHeaderValue"])},
         };
     }
 
     private void AndGivenOneMatchingHeaderWithMismatchingValue()
     {
         _requestHeaders = new HeaderDictionary() {
-            { "testHeader1", new StringValues(new []{ "mismatchingValue" })},
+            { "testHeader1", new StringValues(["mismatchingValue"])},
         };
     }
 
     private void AndGivenOneMatchingHeaderWithMatchingValue()
     {
         _requestHeaders = new HeaderDictionary() {
-            { "testHeader1", new StringValues(new []{ "testHeader1Value1" })},
+            { "testHeader1", new StringValues(["testHeader1Value1"])},
         };
     }
 
     private void AndGivenTwoMatchingHeadersWithMatchingValues()
     {
         _requestHeaders = new HeaderDictionary() {
-            { "testHeader1", new StringValues(new []{ "testHeader1Value1", "bogusValue" })},
-            { "testHeader2", new StringValues(new []{ "bogusValue", "testHeader2Value2" })},
+            { "testHeader1", new StringValues(["testHeader1Value1", "bogusValue"])},
+            { "testHeader2", new StringValues(["bogusValue", "testHeader2Value2"])},
         };
     }
 

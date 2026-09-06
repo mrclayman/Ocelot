@@ -4,7 +4,9 @@ using Ocelot.Configuration.File;
 
 namespace Ocelot.UnitTests.Configuration;
 
-public class UpstreamHeaderRoutingOptionsCreatorTests
+[Trait("Feat", "360")] // https://github.com/ThreeMammals/Ocelot/issues/360
+[Trait("PR", "1684")] // https://github.com/ThreeMammals/Ocelot/pull/1684
+public class UpstreamHeaderRoutingOptionsCreatorTests : UnitTest
 {
     private FileUpstreamHeaderRoutingOptions _fileUpstreamHeaderRoutingOptions;
     private readonly IUpstreamHeaderRoutingOptionsCreator _creator = new UpstreamHeaderRoutingOptionsCreator();
@@ -16,8 +18,8 @@ public class UpstreamHeaderRoutingOptionsCreatorTests
         UpstreamHeaderRoutingOptions expected = new(
             headers: new Dictionary<string, ICollection<string>>()
             {
-                { "HEADER1", new[] { "Value1", "Value2" }},
-                { "HEADER2", new[] { "Value3" }},
+                { "HEADER1", [ "Value1", "Value2" ] },
+                { "HEADER2", [ "Value3" ] },
             },
             mode: UpstreamHeaderRoutingTriggerMode.All
         );
@@ -33,8 +35,8 @@ public class UpstreamHeaderRoutingOptionsCreatorTests
         {
             Headers = new Dictionary<string, ICollection<string>>()
             {
-                { "Header1", new[] { "Value1", "Value2" }},
-                { "Header2", new[] { "Value3" }},
+                { "Header1", [ "Value1", "Value2" ] },
+                { "Header2", [ "Value3" ] },
             },
             TriggerOn = "all",
         };
